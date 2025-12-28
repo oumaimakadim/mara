@@ -1,0 +1,39 @@
+services:
+  # 1. الـ Backend (FastAPI)
+  - type: web
+    name: mara-backend
+    env: python
+    buildCommand: pip install -r mara-ai/apps/backend/requirements.txt
+    startCommand: cd mara-ai/apps/backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mara-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: mara-redis
+          property: connectionString
+
+  # 2. الـ Frontend (Next.js)
+  - type: web
+    name: mara-frontend
+    env: node
+    buildCommand: cd mara-ai/apps/frontend && npm install && npm run build
+    startCommand: cd mara-ai/apps/frontend && npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: mara-backend
+          property: host
+
+# 3. القاعدة البيانات (Postgres)
+databases:
+  - name: mara-db
+
+# 4. الـ Redis (مهم للـ Workflows)
+redis:
+  - name: mara-redis
+    ipAllowList: [] # كيعني غير السيرفيسات ديالك اللي يقدرو يشوفوه
