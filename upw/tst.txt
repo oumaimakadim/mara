@@ -1,0 +1,64 @@
+<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.5;">
+
+    <h2 style="color: #2c3e50; margin-bottom: 5px;">
+        ✅ Comitology Scraper Report
+    </h2>
+    <p style="margin-top: 0; color: #666;">
+        <strong>Date:</strong> {{ $now.toFormat('MMMM dd, yyyy') }}
+    </p>
+
+    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 5px solid #2c3e50; margin-bottom: 20px;">
+        <h3 style="margin-top: 0; margin-bottom: 10px; color: #2c3e50;">📊 Execution Summary</h3>
+        <p style="margin: 5px 0;"><strong>Workflow Status:</strong> Completed Successfully</p>
+        <p style="margin: 5px 0;"><strong>Operation:</strong> {{ $('Filter: Not Processed').all().length }} New voting sheets added to database</p>
+    </div>
+
+    <h3 style="color: #2c3e50;">📄 Processed Documents</h3>
+    <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px;">
+        <thead>
+            <tr style="background-color: #f2f2f2; text-align: left;">
+                <th style="padding: 8px; border: 1px solid #ddd; width: 40%;">Document ID / Title</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">Committee</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">Date of document</th> <!-- بدلت هادي -->
+                <th style="padding: 8px; border: 1px solid #ddd;">Opinion</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ $('Filter: Not Processed').all().map(item => `
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;">${item.json["Draft implementing measure/act"] || item.json["Draft implementing act/measure"] || 'N/A'}</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${item.json["Committee"] || 'N/A'}</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${item.json["Date of vote"] || item.json["Date of opinion"] || 'N/A'}</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${item.json["Opinion"] || 'N/A'}</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">
+                    <a href="${item.json["Download link"]}" style="color: #0066cc; text-decoration: none; font-weight: bold;">View</a>
+                </td>
+            </tr>
+            `).join('') }}
+        </tbody>
+    </table>
+
+    <br>
+
+    <p><strong>🔗 Quick Links</strong></p>
+    <ul>
+        <li>
+           
+            <a href="https://docs.google.com/spreadsheets/d/11yxZZhdr5wh_RfhuWI3rWrNdItOTQ9-i1jUXvbF7pYo/edit" style="text-decoration: none; color: #0066cc;">
+                📊 View Output Spreadsheet
+            </a>
+        </li>
+        <li style="margin-top: 5px;">
+            <a href="https://eumatrix.app.n8n.cloud/workflow/Caf4fHSY08sV3hPj" style="text-decoration: none; color: #0066cc;">
+                🔧 View n8n Workflow
+            </a>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin-top: 20px;">
+    <p style="font-size: 11px; color: #999;">
+        Report generated automatically by n8n workflow | {{ $now.toFormat('MMMM dd, yyyy') }}
+    </p>
+
+</div>
